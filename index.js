@@ -3,9 +3,9 @@ addEventListener('fetch', (event) => {
 })
 
 const corsHeaders = {
-  'Access-Control-Headers': '*',
-  'Access-Control-Methods': 'POST',
-  'Access-Control-Origin': '*',
+  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Methods': 'POST',
+  'Access-Control-Allow-Origin': '*',
 }
 
 const getImages = async (request) => {
