@@ -6,7 +6,6 @@ addEventListener('fetch', (event) => {
  * @param {Request} request
  */
 async function handleRequest(request) {
-  return new Response('Hello worker!', {
-    headers: { 'content-type': 'text/plain' },
-  })
+  const { query } = await request.json()
+  return new Response(`Your query was ${query}`)
 }
