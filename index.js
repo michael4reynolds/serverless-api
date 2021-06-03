@@ -1,11 +1,14 @@
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))
 })
-/**
- * Respond with hello worker text
- * @param {Request} request
- */
-async function handleRequest(request) {
+
+const corsHeaders = {
+  'Access-Control-Headers': '*',
+  'Access-Control-Methods': 'POST',
+  'Access-Control-Origin': '*',
+}
+
+const getImages = async (request) => {
   const { query } = await request.json()
 
   const resp = await fetch(
@@ -26,6 +29,17 @@ async function handleRequest(request) {
   return new Response(JSON.stringify(images), {
     headers: {
       'Content-type': 'application/json',
+      ...corsHeaders,
     },
   })
+}
+
+async function handleRequest(request) {
+  if (request.method === 'OPTIONS') {
+    return new Response('OK', { headers: corsHeaders })
+  }
+
+  if (request.method === 'POST') {
+    return getImages(request)
+  }
 }
