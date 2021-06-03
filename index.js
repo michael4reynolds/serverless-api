@@ -6,7 +6,6 @@ addEventListener('fetch', (event) => {
  * @param {Request} request
  */
 async function handleRequest(request) {
-  const CLIENT_ID = 'PwqC0i0JdupuqppRevfnD6dk3FdZVwoE_CoXIvhRQOk'
   const resp = await fetch('https://api.unsplash.com/photos', {
     headers: {
       Authorization: `Client-ID ${CLIENT_ID}`,
