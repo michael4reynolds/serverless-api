@@ -2,10 +2,23 @@ addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))
 })
 
-const corsHeaders = {
+const allowedOrigins = [
+  'https://workers-unsplash-viewer-ezm.pages.dev',
+  'http://localhost:3000',
+]
+
+const corsHeaders = (origin) => ({
   'Access-Control-Allow-Headers': '*',
   'Access-Control-Allow-Methods': 'POST',
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': origin,
+})
+
+const checkOrigin = (request) => {
+  const origin = request.headers.get('Origin')
+  const foundOrigin = allowedOrigins.find((allowedOrigin) =>
+    allowedOrigin.includes(origin),
+  )
+  return foundOrigin ? foundOrigin : allowedOrigins[0]
 }
 
 const getImages = async (request) => {
@@ -26,17 +39,19 @@ const getImages = async (request) => {
     link: image.links.html,
   }))
 
+  const allowedOrigin = checkOrigin(request)
   return new Response(JSON.stringify(images), {
     headers: {
       'Content-type': 'application/json',
-      ...corsHeaders,
+      ...corsHeaders(allowedOrigin),
     },
   })
 }
 
 async function handleRequest(request) {
   if (request.method === 'OPTIONS') {
-    return new Response('OK', { headers: corsHeaders })
+    const allowedOrigin = checkOrigin(request)
+    return new Response('OK', { headers: corsHeaders(allowedOrigin) })
   }
 
   if (request.method === 'POST') {
